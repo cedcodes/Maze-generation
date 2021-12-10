@@ -52,7 +52,7 @@ class Maze {
 
       current = next;
     } else if (this.stack.length > 0) {
-      let cell = this.stack.pop;
+      let cell = this.stack.pop();
       current = cell;
       current._highlight(this.columns);
     }
@@ -90,11 +90,11 @@ class Cell {
 
     // Side area of canvas will return undefined to
     // side area out of grid scope
+    // Push all available neighbors to the neightbours array
     let top = row !== 0 ? grid[row - 1][col] : undefined;
     let right = col !== grid.length - 1 ? grid[row][col + 1] : undefined;
     let bottom = row !== grid.length - 1 ? grid[row + 1][col] : undefined;
     let left = col !== 0 ? grid[row][col - 1] : undefined;
-
     if (top && !top.visited) neighbors.push(top);
     if (right && !right.visited) neighbors.push(right);
     if (bottom && !bottom.visited) neighbors.push(bottom);
@@ -156,27 +156,28 @@ class Cell {
 
     ctx.fillStyle = 'green'; //Color of visited color
     ctx.fillRect(
-      x + 1,
-      y + 1,
+      x,
+      y,
       this.parentSize / columns - 3,
       this.parentSize / columns - 3
     );
   }
   _removeWall(cell1, cell2) {
     // compare cell on x axis
-    let x = (cell1.colNum = cell2.colNum);
-    if (x == 1) {
+    let x = cell1.colNum - cell2.colNum;
+    if (x === 1) {
       cell1.walls.leftWall = false;
       cell2.walls.rightWall = false;
-    } else if (x == -1) {
+    } else if (x === -1) {
       cell1.walls.rightWall = false;
       cell2.walls.leftWall = false;
     }
-    let y = (cell1.rowNum = cell2.rowNum);
-    if (y == 1) {
+    // compare cell on y axis
+    let y = cell1.rowNum - cell2.rowNum;
+    if (y === 1) {
       cell1.walls.topWall = false;
       cell2.walls.bottomWall = false;
-    } else if (y == -1) {
+    } else if (y === -1) {
       cell1.walls.bottomWall = false;
       cell2.walls.topWall = false;
     }
